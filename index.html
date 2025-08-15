@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QRUPI Star - UPI QR Code Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <!-- QR Code Styling library -->
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+  <style>
+    /* (same style as previous enhanced code) */
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f8; padding: 0; margin: 0; min-height: 100vh;}
+    .container { background: #fff; box-shadow: 0 6px 24px rgba(33,118,212,0.10); border-radius: 18px; margin: 42px auto; max-width: 400px; padding: 32px 24px 32px 24px; text-align: center;}
+    .logo { width: 85px; margin-bottom: 23px;}
+    h2 { color: #2176D4; font-weight: 700; margin-bottom: 10px; font-size: 2rem;}
+    .security-note { background: #eaf7ff; color: #2157a3; border-radius: 7px; padding: 9px 18px; margin: 12px 0 16px 0; display: flex; align-items: center; gap: 10px; font-size: 1rem;}
+    label { display: block; text-align: left; margin-bottom: 4px; font-size: 1rem; color: #2176D4; font-weight: 600;}
+    input { width: 100%; padding: 10px; margin-bottom: 16px; border: 1px solid #bcdffa; border-radius: 7px; font-size: 1rem; background: #f8f9fa;}
+    button { background: linear-gradient(90deg, #2176D4 60%, #FFD700 100%); color: #fff; font-weight: 700; border: none; border-radius: 7px; padding: 12px 28px; font-size: 1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(33,118,212,0.10); margin-bottom: 10px; margin-top: 7px;}
+    button:hover { background: linear-gradient(90deg, #2157a3 60%, #ffbf00 100%);}
+    #qr { margin-top: 18px;}
+    .amount-display { font-size: 1.4em; margin-bottom: 12px; font-weight: bold; color: #2176D4; text-align: center;}
+    .download-link, .timer-text { display: block; color: #2176D4; font-size: 1rem; font-weight: 700; margin-bottom: 10px; margin-top: 4px; text-decoration: none; text-align: center;}
+    .whatsapp-share { background: #25d366; color: #fff; border: none; border-radius: 7px; padding: 10px 22px; font-size: 1rem; font-weight: 600; margin-bottom: 8px; cursor: pointer; margin-right: 8px;}
+    .whatsapp-share:hover { background: #128c7e;}
+    .policy, .contact, .about, .testimonial { margin-top: 32px; padding: 20px; border-radius: 8px; background: #eaf7ff; color: #2157a3; text-align: left; font-size: 1em;}
+    .footer { margin-top: 30px; font-size: 1rem; color: #999; text-align: center;}
+    .testimonial { font-style: italic; color: #2176D4; background: #f9fae7; border-left: 4px solid #FFD700;}
+    #popup { display:none; position:fixed; left:50%; top:22%; transform:translate(-50%, -50%); z-index:9999; background:#eaf7ff; color:#2157a3; padding:22px 32px; border-radius:16px; font-size:1.25em; box-shadow:0 8px 32px rgba(33,118,212,0.20); font-weight:bold; letter-spacing:1px;}
+    @media (max-width: 600px) { .container { max-width: 96vw; padding: 14px; } h2 { font-size: 1.3rem; } #popup {padding:12px 14px;} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img class="logo" src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/152a89ef-6c80-4ca9-8b05-c8564a57034d.png" alt="QRUPI Star Logo">
+    <h2>QRUPI Star</h2>
+    <p style="margin-bottom:22px;color:#555;">Secure payments anytime, anywhere</p>
+    <div class="security-note">
+      <span style="font-size:1.25em; margin-right:6px;">🔒</span>
+      <span>Your payment details are never stored. Site is protected with HTTPS encryption.</span>
+    </div>
+    <label for="amount">Amount (optional)</label>
+    <input id="amount" type="text" placeholder="Enter amount">
+    <label for="purpose">Purpose/Message (optional)</label>
+    <input id="purpose" type="text" placeholder="Payment purpose">
+    <button onclick="generateQR()">Generate QR Code</button>
+    <div id="qr"></div>
+    <div id="popup"></div>
+    <div class="policy"><b>Privacy Policy</b><br>QRUPI Star does <b>not collect or store</b> your UPI ID or any payment data.<br>All QR codes are generated <span style="color:#FFD700;"><b>safely within your browser</b></span>. Your payment information always remains private with you.</div>
+    <div class="testimonial"><b>Why shop owners love QRUPI Star:</b><br>“Branding my UPI QR builds customer trust!”<br>“Customers pay instantly from WhatsApp!”<br><i>– Local Merchants in India</i></div>
+    <div class="about"><b>About QRUPI Star</b><br>Our mission: Power easy and secure UPI payments for every merchant, small business, and professional in India.</div>
+    <div class="contact"><b>Contact/Suggestions</b><br>Need help or want to share feedback?<br>Email: support@qrupistar.in</div>
+    <div class="footer">&copy; 2025 QRUPI Star | Powered by UPI<br><span style="font-size:0.92em;">Last updated: August 2025</span></div>
+  </div>
+  <script>
+    const upiId = '7795966127@ybl';
+    const logoUrl = "https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/aef23796-e939-4f9d-9e7b-24f8b4e09c32.png";
+    let qrCode, timer, remainingSec = 120;
+    const brandColors = ["#2176D4", "#FFD700", "#25d366", "#FF5733", "#800080", "#000"];
+
+    function getRandomColor() {
+      return brandColors[Math.floor(Math.random()*brandColors.length)];
+    }
+
+    function showPopup(msg) {
+      const pop = document.getElementById('popup');
+      pop.innerText = msg;
+      pop.style.display = 'block';
+      setTimeout(() => { pop.style.display = 'none'; }, 1800);
+    }
+
+    function generateQR() {
+      const amount = document.getElementById('amount').value.trim();
+      const purpose = document.getElementById('purpose').value.trim();
+      const color = getRandomColor();
+
+      if (!upiId.match(/^[\w.-]+@[\w]+$/)) { showPopup("Invalid UPI ID!"); return; }
+      if (amount && isNaN(amount)) { showPopup("Amount must be a number!"); return;}
+
+      let upiString = `upi://pay?pa=${upiId}`;
+      if (amount) upiString += `&am=${amount}`;
+      if (purpose) upiString += `&tn=${encodeURIComponent(purpose)}`;
+
+      document.getElementById('qr').innerHTML = '';
+      clearInterval(timer);
+
+      qrCode = new QRCodeStyling({
+        width: 200,
+        height: 200,
+        type: "canvas",
+        data: upiString,
+        image: logoUrl,
+        dotsOptions: { color: color, type: "rounded" },
+        imageOptions: { crossOrigin: "anonymous", width: 40, height: 40 },
+        backgroundOptions: { color: "#fff" }
+      });
+      qrCode.append(document.getElementById('qr'));
+      
+      if (amount) {
+        const amtDiv = document.createElement('div');
+        amtDiv.className = "amount-display";
+        amtDiv.innerText = `₹${amount}`;
+        document.getElementById('qr').appendChild(amtDiv);
+      }
+
+      const dl = document.createElement('a');
+      dl.className = 'download-link';
+      dl.innerText = 'Download QR';
+      dl.href = '#';
+      dl.onclick = function(e){ e.preventDefault(); qrCode.download({ extension: "png" }); showPopup("QR downloaded!"); }
+      document.getElementById('qr').appendChild(dl);
+
+      const waBtn = document.createElement('button');
+      waBtn.className = 'whatsapp-share';
+      waBtn.innerText = 'Share QR on WhatsApp';
+      waBtn.onclick = function(){
+        qrCode.getRawData("png").then(blob => {
+          const message = `Pay me with UPI!\n${upiString}`;
+          window.open(`https://wa.me/?text=${encodeURIComponent(message)}`);
+        });
+        showPopup("WhatsApp share opened!");
+      };
+      document.getElementById('qr').appendChild(waBtn);
+
+      remainingSec = 120;
+      const timerDiv = document.createElement('span');
+      timerDiv.className = "timer-text";
+      timerDiv.innerText = "QR visible for 2:00 minutes";
+      document.getElementById('qr').appendChild(timerDiv);
+
+      timer = setInterval(() => {
+        remainingSec--;
+        if (remainingSec > 0) {
+          const min = String(Math.floor(remainingSec/60)).padStart(2,'0');
+          const sec = String(remainingSec%60).padStart(2,'0');
+          timerDiv.innerText = `QR visible for ${min}:${sec} minutes`;
+        } else {
+          document.getElementById('qr').innerHTML = '';
+          clearInterval(timer);
+          showPopup("QR closed after 2 mins for security.");
+        }
+      }, 1000);
+
+      showPopup("QR generated!");
+    }
+  </script>
+  <script>
+  // PWA registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js').then(
+        function(registration) { /* success */ }, 
+        function(err) { /* error */ }
+      );
+    });
+  }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+</body>
+</html>
