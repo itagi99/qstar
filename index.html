@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>QRUPI Star - UPI QR Code Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/qstar/manifest.json">
   <!-- QR Code Styling library -->
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
   <style>
@@ -148,7 +148,7 @@
   // PWA registration
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('sw.js').then(
+      navigator.serviceWorker.register('/qstar/sw.js').then(
         function(registration) { /* success */ }, 
         function(err) { /* error */ }
       );
@@ -158,3 +158,4 @@
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 </body>
 </html>
+
