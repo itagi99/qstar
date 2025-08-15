@@ -2,9 +2,10 @@ self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open('qrupi-store').then(function(cache) {
       return cache.addAll([
-        '/',
-        '/index.html',
-        '/manifest.json'
+        '/qstar/',
+        '/qstar/index.html',
+        '/qstar/manifest.json'
+        // add more if needed (like logo file: '/qstar/logo192.png')
       ]);
     })
   );
