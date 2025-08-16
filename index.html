@@ -1,162 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>QRUPI Star - UPI QR Code Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="/qstar/manifest.json">
-  <!-- QR Code Styling library -->
-  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-  <style>
-    /* (same style as previous enhanced code) */
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f8; padding: 0; margin: 0; min-height: 100vh;}
-    .container { background: #fff; box-shadow: 0 6px 24px rgba(33,118,212,0.10); border-radius: 18px; margin: 42px auto; max-width: 400px; padding: 32px 24px 32px 24px; text-align: center;}
-    .logo { width: 85px; margin-bottom: 23px;}
-    h2 { color: #2176D4; font-weight: 700; margin-bottom: 10px; font-size: 2rem;}
-    .security-note { background: #eaf7ff; color: #2157a3; border-radius: 7px; padding: 9px 18px; margin: 12px 0 16px 0; display: flex; align-items: center; gap: 10px; font-size: 1rem;}
-    label { display: block; text-align: left; margin-bottom: 4px; font-size: 1rem; color: #2176D4; font-weight: 600;}
-    input { width: 100%; padding: 10px; margin-bottom: 16px; border: 1px solid #bcdffa; border-radius: 7px; font-size: 1rem; background: #f8f9fa;}
-    button { background: linear-gradient(90deg, #2176D4 60%, #FFD700 100%); color: #fff; font-weight: 700; border: none; border-radius: 7px; padding: 12px 28px; font-size: 1rem; cursor: pointer; box-shadow: 0 2px 8px rgba(33,118,212,0.10); margin-bottom: 10px; margin-top: 7px;}
-    button:hover { background: linear-gradient(90deg, #2157a3 60%, #ffbf00 100%);}
-    #qr { margin-top: 18px;}
-    .amount-display { font-size: 1.4em; margin-bottom: 12px; font-weight: bold; color: #2176D4; text-align: center;}
-    .download-link, .timer-text { display: block; color: #2176D4; font-size: 1rem; font-weight: 700; margin-bottom: 10px; margin-top: 4px; text-decoration: none; text-align: center;}
-    .whatsapp-share { background: #25d366; color: #fff; border: none; border-radius: 7px; padding: 10px 22px; font-size: 1rem; font-weight: 600; margin-bottom: 8px; cursor: pointer; margin-right: 8px;}
-    .whatsapp-share:hover { background: #128c7e;}
-    .policy, .contact, .about, .testimonial { margin-top: 32px; padding: 20px; border-radius: 8px; background: #eaf7ff; color: #2157a3; text-align: left; font-size: 1em;}
-    .footer { margin-top: 30px; font-size: 1rem; color: #999; text-align: center;}
-    .testimonial { font-style: italic; color: #2176D4; background: #f9fae7; border-left: 4px solid #FFD700;}
-    #popup { display:none; position:fixed; left:50%; top:22%; transform:translate(-50%, -50%); z-index:9999; background:#eaf7ff; color:#2157a3; padding:22px 32px; border-radius:16px; font-size:1.25em; box-shadow:0 8px 32px rgba(33,118,212,0.20); font-weight:bold; letter-spacing:1px;}
-    @media (max-width: 600px) { .container { max-width: 96vw; padding: 14px; } h2 { font-size: 1.3rem; } #popup {padding:12px 14px;} }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment QR Code Generator</title>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#138808">
+    <style>
+        :root {
+            --saffron: #FF671F;
+            --white: #FFFFFF;
+            --green: #138808;
+            --blue: #1976d2;
+            --accent: #233d7b;
+            --border-radius: 18px;
+            --box-shadow: 0 8px 32px 0 rgba(31,38,135,.23);
+        }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, var(--saffron) 0%, var(--white) 50%, var(--green) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c2c2c;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem 1.3rem 1.2rem;
+            margin: 1rem;
+            border-top: 6px solid var(--saffron);
+            border-bottom: 6px solid var(--green);
+            border-left: 2px solid var(--blue);
+            border-right: 2px solid var(--blue);
+        }
+        .logo {
+            background: radial-gradient(circle, var(--blue) 70%, var(--white) 100%);
+            border-radius: 50%;
+            width: 62px;
+            height: 62px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+            font-size: 2.3rem;
+            font-weight: bold;
+            box-shadow: 0 4px 16px var(--blue);
+            margin: 0 auto 1.3rem;
+            border: 2px solid var(--saffron);
+        }
+        h2 {
+            text-align: center;
+            margin: 0 0 0.5rem;
+            color: var(--blue);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            margin-bottom: 1.1rem;
+            position: relative;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 2.6rem;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--blue);
+            background: #f8f8f8;
+            font-size: 1.07rem;
+            transition: border-color 0.23s;
+        }
+        .input-group input:focus {
+            border-color: var(--saffron);
+            outline: none;
+            background: #fff;
+        }
+        .input-group::before {
+            content: "₹";
+            position: absolute;
+            left: 1rem;
+            top: 49%;
+            transform: translateY(-50%);
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--blue);
+        }
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            background: linear-gradient(90deg, var(--saffron) 0%, var(--blue) 70%, var(--green) 100%);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(19, 136, 8, 0.17);
+            cursor: pointer;
+            margin: 0.7rem 0 0.3rem;
+            letter-spacing: .7px;
+            transition: filter .19s;
+        }
+        button:hover {
+            filter: brightness(1.10);
+        }
+        #qrcode {
+            margin: 1.1rem auto 0.6rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 6px rgba(25, 118, 210, 0.10);
+            border: 2px solid var(--blue);
+            transition: opacity .29s;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+        }
+        #qrcode.show { opacity: 1; height: auto;}
+        #timer {
+            font-size: 1rem;
+            color: var(--saffron);
+            font-weight: bold;
+            background: #fff6ec;
+            border-radius: 14px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 6px rgba(255,103,31,.12);
+        }
+        .amount-display {
+            font-size: 1.23rem;
+            color: var(--blue);
+            font-weight: 700;
+            margin: 1.1rem 0 0.65rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity .27s, transform .27s;
+        }
+        .amount-display.show { opacity:1; transform: translateY(0); }
+        .upi-details {
+            background: #f1f7ef;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            font-size: 0.97rem;
+            margin-top: 1.3rem;
+            box-shadow: 0 2px 5px rgba(35,61,123,.05);
+        }
+        .upi-details strong { color: var(--accent);}
+        .footer {
+            margin-top: 0.8rem;
+            font-size: 0.83rem;
+            color: #555;
+            text-align: center;
+        }
+        @media (max-width:480px) {
+            .container { padding: 1rem;}
+            .logo { width: 44px; height:44px;}
+            h2 {font-size: 1.1rem;}
+            .upi-details,.footer { font-size:1dr;}
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <img class="logo" src="/qstar/logo.png" alt="QRUPI Star Logo">
-    <h2>QRUPI Star</h2>
-    <p style="margin-bottom:22px;color:#555;">Secure payments anytime, anywhere</p>
-    <div class="security-note">
-      <span style="font-size:1.25em; margin-right:6px;">🔒</span>
-      <span>Your payment details are never stored. Site is protected with HTTPS encryption.</span>
+    <div class="container">
+        <div class="logo"><span role="img" aria-label="Ashoka Chakra">🟦</span></div>
+        <h2>ANNAPURNA TRADERS</h2>
+        <div class="subtitle">Enter amount to generate payment QR code</div>
+        <div class="input-group">
+            <input type="number" id="amount" min="1" placeholder="Enter amount in INR">
+        </div>
+        <button id="generateBtn" onclick="generateQR()">Generate QR Code</button>
+        <div id="timer"></div>
+        <div id="qrcode"></div>
+        <div id="amountDisplay" class="amount-display"></div>
+        <div class="upi-details">
+            <p><strong>UPI ID:</strong> 6363304520@okbizaxis</p>
+            <p><strong>Note:</strong> Scan the QR code using any UPI payment app</p>
+        </div>
+        <div class="footer">
+            <p>🇮🇳 Safe and secure digital payments – Install this web app for instant payments!</p>
+        </div>
     </div>
-    <label for="amount">Amount (optional)</label>
-    <input id="amount" type="text" placeholder="Enter amount">
-    <label for="purpose">Purpose/Message (optional)</label>
-    <input id="purpose" type="text" placeholder="Payment purpose">
-    <button onclick="generateQR()">Generate QR Code</button>
-    <div id="qr"></div>
-    <div id="popup"></div>
-    <div class="policy"><b>Privacy Policy</b><br>QRUPI Star does <b>not collect or store</b> your UPI ID or any payment data.<br>All QR codes are generated <span style="color:#FFD700;"><b>safely within your browser</b></span>. Your payment information always remains private with you.</div>
-    <div class="testimonial"><b>Why shop owners love QRUPI Star:</b><br>“Branding my UPI QR builds customer trust!”<br>“Customers pay instantly from WhatsApp!”<br><i>– Local Merchants in India</i></div>
-    <div class="about"><b>About QRUPI Star</b><br>Our mission: Power easy and secure UPI payments for every merchant, small business, and professional in India.</div>
-    <div class="contact"><b>Contact/Suggestions</b><br>Need help or want to share feedback?<br>Email: support@qrupistar.in</div>
-    <div class="footer">&copy; 2025 QRUPI Star | Powered by UPI<br><span style="font-size:0.92em;">Last updated: August 2025</span></div>
-  </div>
-  <script>
-    const upiId = '7795966127@ybl';
-    const logoUrl = "https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/aef23796-e939-4f9d-9e7b-24f8b4e09c32.png";
-    let qrCode, timer, remainingSec = 120;
-    const brandColors = ["#2176D4", "#FFD700", "#25d366", "#FF5733", "#800080", "#000"];
-
-    function getRandomColor() {
-      return brandColors[Math.floor(Math.random()*brandColors.length)];
-    }
-
-    function showPopup(msg) {
-      const pop = document.getElementById('popup');
-      pop.innerText = msg;
-      pop.style.display = 'block';
-      setTimeout(() => { pop.style.display = 'none'; }, 1800);
-    }
-
-    function generateQR() {
-      const amount = document.getElementById('amount').value.trim();
-      const purpose = document.getElementById('purpose').value.trim();
-      const color = getRandomColor();
-
-      if (!upiId.match(/^[\w.-]+@[\w]+$/)) { showPopup("Invalid UPI ID!"); return; }
-      if (amount && isNaN(amount)) { showPopup("Amount must be a number!"); return;}
-
-      let upiString = `upi://pay?pa=${upiId}`;
-      if (amount) upiString += `&am=${amount}`;
-      if (purpose) upiString += `&tn=${encodeURIComponent(purpose)}`;
-
-      document.getElementById('qr').innerHTML = '';
-      clearInterval(timer);
-
-      qrCode = new QRCodeStyling({
-        width: 200,
-        height: 200,
-        type: "canvas",
-        data: upiString,
-        image: logoUrl,
-        dotsOptions: { color: color, type: "rounded" },
-        imageOptions: { crossOrigin: "anonymous", width: 40, height: 40 },
-        backgroundOptions: { color: "#fff" }
-      });
-      qrCode.append(document.getElementById('qr'));
-      
-      if (amount) {
-        const amtDiv = document.createElement('div');
-        amtDiv.className = "amount-display";
-        amtDiv.innerText = `₹${amount}`;
-        document.getElementById('qr').appendChild(amtDiv);
-      }
-
-      const dl = document.createElement('a');
-      dl.className = 'download-link';
-      dl.innerText = 'Download QR';
-      dl.href = '#';
-      dl.onclick = function(e){ e.preventDefault(); qrCode.download({ extension: "png" }); showPopup("QR downloaded!"); }
-      document.getElementById('qr').appendChild(dl);
-
-      const waBtn = document.createElement('button');
-      waBtn.className = 'whatsapp-share';
-      waBtn.innerText = 'Share QR on WhatsApp';
-      waBtn.onclick = function(){
-        qrCode.getRawData("png").then(blob => {
-          const message = `Pay me with UPI!\n${upiString}`;
-          window.open(`https://wa.me/?text=${encodeURIComponent(message)}`);
-        });
-        showPopup("WhatsApp share opened!");
-      };
-      document.getElementById('qr').appendChild(waBtn);
-
-      remainingSec = 120;
-      const timerDiv = document.createElement('span');
-      timerDiv.className = "timer-text";
-      timerDiv.innerText = "QR visible for 2:00 minutes";
-      document.getElementById('qr').appendChild(timerDiv);
-
-      timer = setInterval(() => {
-        remainingSec--;
-        if (remainingSec > 0) {
-          const min = String(Math.floor(remainingSec/60)).padStart(2,'0');
-          const sec = String(remainingSec%60).padStart(2,'0');
-          timerDiv.innerText = `QR visible for ${min}:${sec} minutes`;
-        } else {
-          document.getElementById('qr').innerHTML = '';
-          clearInterval(timer);
-          showPopup("QR closed after 2 mins for security.");
+    <script>
+        let timerInterval;
+        function generateQR() {
+            const amount = document.getElementById('amount').value;
+            const qrcodeElement = document.getElementById('qrcode');
+            const amountDisplay = document.getElementById('amountDisplay');
+            const timerDisplay = document.getElementById('timer');
+            if (!amount || amount <= 0) {
+                showError('Please enter a valid amount greater than ₹1');
+                return;
+            }
+            clearInterval(timerInterval);
+            timerDisplay.textContent = '';
+            qrcodeElement.innerHTML = '';
+            qrcodeElement.classList.remove('show');
+            amountDisplay.classList.remove('show');
+            const upiID = '6363304520@okbizaxis';
+            const upiURI = `upi://pay?pa=${upiID}&pn=Recipient&am=${amount}&cu=INR&tn=Payment`;
+            new QRCode(qrcodeElement, {
+                text: upiURI,
+                width: 200, height: 200,
+                colorDark: "#233d7b",
+                colorLight: "#fff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            qrcodeElement.classList.add('show');
+            amountDisplay.textContent = `₹${amount}`;
+            amountDisplay.style.color = 'var(--blue)';
+            amountDisplay.classList.add('show');
+            let time = 120;
+            timerDisplay.textContent = `QR valid for ${time} seconds ⏳`;
+            timerDisplay.style.display = 'inline-block';
+            timerInterval = setInterval(() => {
+                time--;
+                timerDisplay.textContent = `QR valid for ${time} seconds ⏳`;
+                if (time <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = 'QR expired ⛔';
+                    qrcodeElement.innerHTML = '';
+                    qrcodeElement.classList.remove('show');
+                    amountDisplay.textContent = '';
+                    amountDisplay.classList.remove('show');
+                }
+            }, 1000);
         }
-      }, 1000);
-
-      showPopup("QR generated!");
-    }
-  </script>
-  <script>
-  // PWA registration
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/qstar/sw.js').then(
-        function(registration) { /* success */ }, 
-        function(err) { /* error */ }
-      );
-    });
-  }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+        function showError(message) {
+            const amountDisplay = document.getElementById('amountDisplay');
+            amountDisplay.textContent = message;
+            amountDisplay.style.color = varSaffron = "#FF671F";
+            amountDisplay.classList.add('show');
+            setTimeout(() => {
+                amountDisplay.classList.remove('show');
+                setTimeout(() => {
+                    amountDisplay.style.color = '';
+                    amountDisplay.textContent = '';
+                }, 320);
+            }, 2200);
+        }
+        // PWA support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js');
+            });
+        }
+    </script>
 </body>
 </html>
-
-
